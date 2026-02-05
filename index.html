@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Para ti</title>
+    <title>Para mi Estrella</title>
     <style>
-        /* --- ESTILO VISUAL: MINIMALISTA Y ELEGANTE --- */
+        /* --- ESTILO VISUAL --- */
         :root {
             --bg-color: #fdfbf7; /* Crema suave */
-            --accent-color: #d4a5a5; /* Rosa palo */
-            --text-color: #4a4a4a;
+            --accent-color: #e08e8e; /* Rosa más cálido */
+            --star-color: rgba(255, 215, 0, 0.6); /* Dorado suave */
+            --text-color: #5a4a4a;
             --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             --font-serif: 'Georgia', serif;
         }
@@ -22,227 +23,171 @@
             background-color: var(--bg-color);
             font-family: var(--font-main);
             color: var(--text-color);
-            overflow: hidden; /* Evita scroll indeseado */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Fondo animado sutil */
+        /* Fondo de Estrellas */
         .background {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #fff5f5 0%, #fdfbf7 100%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #fff9f0 0%, #fdfbf7 100%);
             z-index: -2;
         }
 
-        .particles {
+        .stars-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1;
+        }
+
+        .star {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
+            background-color: var(--star-color);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle infinite ease-in-out;
         }
 
-        .particle {
-            position: absolute;
-            background: rgba(212, 165, 165, 0.3);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-
-        /* --- PANTALLA DE INICIO (INTERACTIVIDAD) --- */
+        /* --- PANTALLA DE INICIO (CORAZÓN) --- */
         #start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            transition: opacity 1s ease;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 100; transition: opacity 1s ease;
+            cursor: pointer; /* Indica que se puede hacer click */
         }
 
-        .start-btn {
-            padding: 15px 30px;
+        .heart-trigger-container {
+            text-align: center;
+            animation: pulseHeart 2s infinite ease-in-out;
+        }
+
+        .heart-svg {
+            width: 100px; height: 90px;
+            fill: var(--accent-color);
+            filter: drop-shadow(0 5px 10px rgba(224, 142, 142, 0.4));
+            transition: transform 0.3s;
+        }
+
+        .click-text {
+            margin-top: 15px;
             font-family: var(--font-serif);
-            font-size: 1.2rem;
-            color: var(--text-color);
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 2px;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
         }
 
-        .start-btn:hover {
-            background: var(--accent-color);
-            color: white;
-            box-shadow: 0 5px 15px rgba(212, 165, 165, 0.4);
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         /* --- CONTENIDO PRINCIPAL --- */
         #main-content {
-            opacity: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 90%;
-            max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
+            opacity: 0; display: none;
+            flex-direction: column; align-items: center; text-align: center;
+            width: 90%; max-width: 500px;
+            padding: 20px; box-sizing: border-box;
             transition: opacity 2s ease;
         }
 
-        /* Galería de fotos elegante */
+        /* Galería de fotos MEJORADA */
         .photo-container {
             position: relative;
-            width: 100%;
-            height: 250px; /* Ajuste para móvil */
+            width: 100%; height: 350px; /* Más alto para fotos más grandes */
             margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .photo {
             position: absolute;
-            width: 180px;
-            height: 220px;
+            width: 75%; /* Fotos más grandes */
+            height: auto;
+            aspect-ratio: 3/4; /* Mantiene proporción vertical */
             object-fit: cover;
-            border: 8px solid white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: transform 0.5s ease;
-            opacity: 0; /* Inicia invisible */
+            border: 6px solid #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            opacity: 0; transition: all 1.5s ease; /* Transición más suave */
+            border-radius: 4px;
         }
 
-        /* Efecto 'disperso' para las fotos */
-        .photo:nth-child(1) { transform: rotate(-5deg) translate(-20px, 10px); z-index: 1; }
-        .photo:nth-child(2) { transform: rotate(3deg) translate(20px, -5px); z-index: 2; }
-        .photo:nth-child(3) { transform: rotate(-2deg) translate(0, 5px); z-index: 3; }
+        /* Apilado sutil */
+        .photo:nth-child(1) { transform: rotate(-3deg); z-index: 1; }
+        .photo:nth-child(2) { transform: rotate(2deg); z-index: 2; }
+        .photo:nth-child(3) { transform: rotate(-1deg); z-index: 3; }
+        
+        .photo.visible { opacity: 1; }
 
         /* Texto Typewriter */
         .message-box {
             font-family: var(--font-serif);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            min-height: 120px; /* Reserva espacio */
+            font-size: 1.15rem; line-height: 1.6;
+            margin-bottom: 40px; min-height: 140px;
             color: #5e5e5e;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            background-color: var(--accent-color);
-            animation: blink 1s infinite;
-        }
+        .cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-
-        /* Botón de Pregunta */
+        /* Pregunta Final */
         .question-area {
-            opacity: 0; /* Aparece al final */
-            transition: opacity 1s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
+            opacity: 0; transition: opacity 1s ease;
+            display: flex; flex-direction: column; gap: 20px; align-items: center;
         }
 
-        .big-question {
-            font-size: 1.5rem;
-            font-weight: normal;
-            letter-spacing: 1px;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
+        .big-question { font-size: 1.6rem; color: var(--text-color); margin-bottom: 10px; }
 
         .yes-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 165, 165, 0.4);
-            transition: transform 0.2s;
+            background-color: var(--accent-color); color: white; border: none;
+            padding: 15px 50px; font-size: 1.2rem; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(224, 142, 142, 0.4);
+            transition: transform 0.2s; font-family: var(--font-serif);
         }
-
         .yes-btn:active { transform: scale(0.95); }
 
-        /* --- MENSAJE FINAL (POST-CLICK) --- */
+        /* Mensaje Final */
         #final-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            display: none;
-            width: 100%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; display: none; width: 90%;
         }
-        
         #final-message h1 {
-            font-family: var(--font-serif);
-            font-size: 2rem;
-            color: var(--accent-color);
+            font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-color);
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
-
-        /* Confeti simple con CSS */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            animation: confetti-fall 3s linear forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;}
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0;}
-        }
 
     </style>
 </head>
 <body>
 
     <div class="background"></div>
-    <div class="particles" id="particles"></div>
+    <div class="stars-container" id="stars-container"></div>
 
     <audio id="bg-music" loop>
         <source src="musica.mp3" type="audio/mp3">
     </audio>
 
-    <div id="start-screen">
-        <button class="start-btn" onclick="startExperience()">Tengo algo para ti...</button>
+    <div id="start-screen" onclick="startExperience()">
+        <div class="heart-trigger-container">
+            <svg class="heart-svg" viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            <p class="click-text">Da click aquí</p>
+        </div>
     </div>
 
     <div id="main-content">
         <div class="photo-container">
-            <img src="foto1.jpg" class="photo" alt="Momento 1">
-            <img src="foto2.jpg" class="photo" alt="Momento 2">
-            <img src="foto3.jpg" class="photo" alt="Momento 3">
+            <img src="foto1.jpg" class="photo" alt="Recuerdo 1">
+            <img src="foto2.jpg" class="photo" alt="Recuerdo 2">
+            <img src="foto3.jpg" class="photo" alt="Recuerdo 3">
         </div>
 
         <div class="message-box">
@@ -257,64 +202,79 @@
 
     <div id="final-message">
         <h1>¡Sabía que dirías que sí! ❤️</h1>
-        <p style="margin-top: 10px; color: #666;">Pronto nos veremos.</p>
+        <p style="margin-top: 15px; color: #666; font-size: 1.1rem;">Eres mi estrella favorita.</p>
     </div>
 
     <script>
         // --- CONFIGURACIÓN DEL TEXTO ---
-        // El | indica un salto de línea (pausa breve)
-        const textToType = "La distancia nos separa en kilómetros, pero nunca en sentimiento. |Cada vez que suena mi teléfono y eres tú, el mundo se siente un poco más pequeño. |Gracias por ser mi lugar seguro, incluso desde lejos...";
-        
-        const typeSpeed = 50; // Velocidad de escritura
-        const pauseTime = 800; // Pausa en los saltos de línea
+        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrella que siempre miro para guiarme. |Gracias por iluminar mis días, incluso a la distancia...";
+        const typeSpeed = 55;
+        const pauseTime = 1000;
 
-        // --- LÓGICA ---
-        
-        // 1. Iniciar Experiencia
+        // 1. Generar Estrellas (Theme)
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            for(let j=0; j<35; j++) { // Más estrellas
+                const s = document.createElement('div');
+                s.classList.add('star');
+                s.style.left = Math.random() * 100 + '%';
+                s.style.top = Math.random() * 100 + '%';
+                const size = Math.random() * 10 + 5; // Tamaño variable
+                s.style.width = size + 'px';
+                s.style.height = size + 'px';
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Titileo variado
+                s.style.animationDelay = Math.random() + 's';
+                container.appendChild(s);
+            }
+        }
+        createStars();
+
+        // 2. Iniciar Experiencia (Click en el corazón)
         function startExperience() {
             const startScreen = document.getElementById('start-screen');
             const mainContent = document.getElementById('main-content');
             const music = document.getElementById('bg-music');
 
-            // Intentar reproducir música
-            music.volume = 0.5;
-            music.play().catch(e => console.log("Interacción necesaria para audio"));
+            music.volume = 0.6;
+            music.play().catch(e => console.log("Audio requiere interacción"));
 
-            // Transición
             startScreen.style.opacity = '0';
             setTimeout(() => {
                 startScreen.style.display = 'none';
                 mainContent.style.display = 'flex';
-                // Pequeño delay para que el flex se renderice antes de la opacidad
                 setTimeout(() => {
                     mainContent.style.opacity = '1';
-                    showPhotos();
-                    // Empezar a escribir después de que aparezcan las fotos
-                    setTimeout(typeWriter, 1500); 
+                    // Iniciamos la secuencia de fotos lenta
+                    showPhotosSlowly();
                 }, 100);
             }, 1000);
         }
 
-        // 2. Mostrar Fotos con Fade-in
-        function showPhotos() {
+        // 3. Mostrar fotos LENTAMENTE
+        function showPhotosSlowly() {
             const photos = document.querySelectorAll('.photo');
+            let delayTime = 500; // Tiempo antes de que empiece la primera
+            
             photos.forEach((photo, index) => {
                 setTimeout(() => {
-                    photo.style.opacity = '1';
-                }, index * 500); // Aparecen una por una
+                    photo.classList.add('visible');
+                    // Si es la última foto, calculamos cuándo empezar a escribir
+                    if (index === photos.length - 1) {
+                       setTimeout(typeWriter, 2000); // Espera 2s después de la última foto
+                    }
+                }, delayTime);
+                // Aumentamos el tiempo para la siguiente foto (2.5 segundos entre fotos)
+                delayTime += 2500; 
             });
         }
 
-        // 3. Efecto Typewriter
+        // 4. Efecto Typewriter
         let i = 0;
         const textElement = document.getElementById('typewriter-text');
-        
         function typeWriter() {
             if (i < textToType.length) {
                 const char = textToType.charAt(i);
-                
                 if (char === '|') {
-                    // Si es el caracter especial, hacemos una pausa y salto de línea visual opcional
                     i++;
                     textElement.innerHTML += '<br><br>';
                     setTimeout(typeWriter, pauseTime);
@@ -324,7 +284,6 @@
                     setTimeout(typeWriter, typeSpeed);
                 }
             } else {
-                // Terminado de escribir, mostrar pregunta
                 document.querySelector('.cursor').style.display = 'none';
                 setTimeout(() => {
                     document.getElementById('question-area').style.opacity = '1';
@@ -332,47 +291,38 @@
             }
         }
 
-        // 4. Generar Partículas de fondo
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for(let j=0; j<20; j++) {
-                const p = document.createElement('div');
-                p.classList.add('particle');
-                p.style.left = Math.random() * 100 + '%';
-                p.style.width = (Math.random() * 10 + 5) + 'px';
-                p.style.height = p.style.width;
-                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                p.style.animationDelay = (Math.random() * 5) + 's';
-                container.appendChild(p);
-            }
-        }
-        createParticles();
-
         // 5. Reacción al "Sí"
         function sayYes() {
             const mainContent = document.getElementById('main-content');
             const finalMessage = document.getElementById('final-message');
             
-            // Desvanecer contenido actual
-            mainContent.style.transition = 'opacity 1s';
             mainContent.style.opacity = '0';
-
             setTimeout(() => {
                 mainContent.style.display = 'none';
                 finalMessage.style.display = 'block';
-                createConfetti();
+                // Lluvia de estrellas y corazones al final
+                createFinalConfetti();
             }, 1000);
         }
 
-        function createConfetti() {
-            const colors = ['#d4a5a5', '#ffebd2', '#e6e6fa', '#ffd700'];
-            for (let k = 0; k < 100; k++) {
+        function createFinalConfetti() {
+            const colors = ['#e08e8e', '#ffd700', '#fff'];
+            for (let k = 0; k < 120; k++) {
                 const conf = document.createElement('div');
-                conf.classList.add('confetti');
+                // Reutilizamos la clase star para el confeti, pero cayendo
+                conf.classList.add('star'); 
+                conf.style.position = 'fixed';
                 conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
                 conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                // Animación de caída simple inline para no ensuciar el CSS
+                conf.style.transition = `top ${Math.random() * 3 + 2}s linear, opacity 1s ease-out 2s`;
                 document.body.appendChild(conf);
+
+                setTimeout(() => {
+                     conf.style.top = '110vh'; // Caer fuera de la pantalla
+                     conf.style.opacity = '0';
+                }, 100);
             }
         }
     </script>
