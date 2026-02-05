@@ -1,147 +1,380 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para ti 💖</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para ti</title>
+    <style>
+        /* --- ESTILO VISUAL: MINIMALISTA Y ELEGANTE --- */
+        :root {
+            --bg-color: #fdfbf7; /* Crema suave */
+            --accent-color: #d4a5a5; /* Rosa palo */
+            --text-color: #4a4a4a;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-serif: 'Georgia', serif;
+        }
 
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(120deg, #ff9a9e, #fad0c4);
-    font-family: 'Segoe UI', sans-serif;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg-color);
+            font-family: var(--font-main);
+            color: var(--text-color);
+            overflow: hidden; /* Evita scroll indeseado */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  .card {
-    background: rgba(255,255,255,0.95);
-    padding: 30px;
-    border-radius: 25px;
-    text-align: center;
-    max-width: 330px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    animation: fadeIn 2s ease;
-  }
+        /* Fondo animado sutil */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #fff5f5 0%, #fdfbf7 100%);
+            z-index: -2;
+        }
 
-  h1 {
-    color: #ff4d6d;
-    margin-bottom: 10px;
-  }
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
 
-  p {
-    font-size: 16px;
-    color: #444;
-    min-height: 60px;
-  }
+        .particle {
+            position: absolute;
+            background: rgba(212, 165, 165, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
 
-  button {
-    margin-top: 15px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    background: #ff4d6d;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
 
-  button:hover {
-    transform: scale(1.05);
-  }
+        /* --- PANTALLA DE INICIO (INTERACTIVIDAD) --- */
+        #start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
 
-  .hidden {
-    display: none;
-  }
+        .start-btn {
+            padding: 15px 30px;
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            color: var(--text-color);
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
+        .start-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 5px 15px rgba(212, 165, 165, 0.4);
+        }
 
-  .heart {
-    position: fixed;
-    bottom: -20px;
-    color: #ff4d6d;
-    font-size: 20px;
-    animation: floatUp 6s linear infinite;
-    opacity: 0.8;
-  }
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            opacity: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: opacity 2s ease;
+        }
 
-  @keyframes floatUp {
-    from { transform: translateY(0); opacity: 1; }
-    to { transform: translateY(-110vh); opacity: 0; }
-  }
-</style>
+        /* Galería de fotos elegante */
+        .photo-container {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Ajuste para móvil */
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo {
+            position: absolute;
+            width: 180px;
+            height: 220px;
+            object-fit: cover;
+            border: 8px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.5s ease;
+            opacity: 0; /* Inicia invisible */
+        }
+
+        /* Efecto 'disperso' para las fotos */
+        .photo:nth-child(1) { transform: rotate(-5deg) translate(-20px, 10px); z-index: 1; }
+        .photo:nth-child(2) { transform: rotate(3deg) translate(20px, -5px); z-index: 2; }
+        .photo:nth-child(3) { transform: rotate(-2deg) translate(0, 5px); z-index: 3; }
+
+        /* Texto Typewriter */
+        .message-box {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            min-height: 120px; /* Reserva espacio */
+            color: #5e5e5e;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: var(--accent-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* Botón de Pregunta */
+        .question-area {
+            opacity: 0; /* Aparece al final */
+            transition: opacity 1s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .big-question {
+            font-size: 1.5rem;
+            font-weight: normal;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .yes-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 165, 165, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .yes-btn:active { transform: scale(0.95); }
+
+        /* --- MENSAJE FINAL (POST-CLICK) --- */
+        #final-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: none;
+            width: 100%;
+        }
+        
+        #final-message h1 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--accent-color);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* Confeti simple con CSS */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1;}
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0;}
+        }
+
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-  <h1>Hola mi amor 💕</h1>
-  <p id="texto"></p>
+    <div class="background"></div>
+    <div class="particles" id="particles"></div>
 
-  <button id="btnMusic">Toca aquí 🎶</button>
-  <br>
+    <audio id="bg-music" loop>
+        <source src="musica.mp3" type="audio/mp3">
+    </audio>
 
-  <button id="btnPregunta" class="hidden">
-    ¿Quieres ser mi Valentine? 💌
-  </button>
+    <div id="start-screen">
+        <button class="start-btn" onclick="startExperience()">Tengo algo para ti...</button>
+    </div>
 
-  <p id="final" class="hidden">
-    Sabía que dirías que sí 🥰<br>
-    Gracias por existir ❤️
-  </p>
-</div>
+    <div id="main-content">
+        <div class="photo-container">
+            <img src="foto1.jpg" class="photo" alt="Momento 1">
+            <img src="foto2.jpg" class="photo" alt="Momento 2">
+            <img src="foto3.jpg" class="photo" alt="Momento 3">
+        </div>
 
-<audio id="music" loop>
-  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
-</audio>
+        <div class="message-box">
+            <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
+        </div>
 
-<script>
-  const texto = document.getElementById("texto");
-  const mensaje = "Aunque estemos lejos, mi corazón siempre encuentra el camino hacia ti. Cada mensaje, cada llamada, cada sonrisa tuya… me hace sentir cerca. 💖";
-  let i = 0;
+        <div class="question-area" id="question-area">
+            <div class="big-question">¿Quieres ser mi Valentine?</div>
+            <button class="yes-btn" onclick="sayYes()">¡Sí, acepto!</button>
+        </div>
+    </div>
 
-  function escribir() {
-    if (i < mensaje.length) {
-      texto.innerHTML += mensaje.charAt(i);
-      i++;
-      setTimeout(escribir, 45);
-    } else {
-      document.getElementById("btnPregunta").classList.remove("hidden");
-    }
-  }
+    <div id="final-message">
+        <h1>¡Sabía que dirías que sí! ❤️</h1>
+        <p style="margin-top: 10px; color: #666;">Pronto nos veremos.</p>
+    </div>
 
-  escribir();
+    <script>
+        // --- CONFIGURACIÓN DEL TEXTO ---
+        // El | indica un salto de línea (pausa breve)
+        const textToType = "La distancia nos separa en kilómetros, pero nunca en sentimiento. |Cada vez que suena mi teléfono y eres tú, el mundo se siente un poco más pequeño. |Gracias por ser mi lugar seguro, incluso desde lejos...";
+        
+        const typeSpeed = 50; // Velocidad de escritura
+        const pauseTime = 800; // Pausa en los saltos de línea
 
-  document.getElementById("btnMusic").onclick = () => {
-    document.getElementById("music").play();
-    document.getElementById("btnMusic").style.display = "none";
-  };
+        // --- LÓGICA ---
+        
+        // 1. Iniciar Experiencia
+        function startExperience() {
+            const startScreen = document.getElementById('start-screen');
+            const mainContent = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
 
-  document.getElementById("btnPregunta").onclick = () => {
-    document.getElementById("final").classList.remove("hidden");
-    lanzarCorazones();
-  };
+            // Intentar reproducir música
+            music.volume = 0.5;
+            music.play().catch(e => console.log("Interacción necesaria para audio"));
 
-  function lanzarCorazones() {
-    for (let j = 0; j < 25; j++) {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (4 + Math.random() * 3) + "s";
-      document.body.appendChild(heart);
+            // Transición
+            startScreen.style.opacity = '0';
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                // Pequeño delay para que el flex se renderice antes de la opacidad
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    showPhotos();
+                    // Empezar a escribir después de que aparezcan las fotos
+                    setTimeout(typeWriter, 1500); 
+                }, 100);
+            }, 1000);
+        }
 
-      setTimeout(() => heart.remove(), 7000);
-    }
-  }
-</script>
+        // 2. Mostrar Fotos con Fade-in
+        function showPhotos() {
+            const photos = document.querySelectorAll('.photo');
+            photos.forEach((photo, index) => {
+                setTimeout(() => {
+                    photo.style.opacity = '1';
+                }, index * 500); // Aparecen una por una
+            });
+        }
 
+        // 3. Efecto Typewriter
+        let i = 0;
+        const textElement = document.getElementById('typewriter-text');
+        
+        function typeWriter() {
+            if (i < textToType.length) {
+                const char = textToType.charAt(i);
+                
+                if (char === '|') {
+                    // Si es el caracter especial, hacemos una pausa y salto de línea visual opcional
+                    i++;
+                    textElement.innerHTML += '<br><br>';
+                    setTimeout(typeWriter, pauseTime);
+                } else {
+                    textElement.innerHTML += char;
+                    i++;
+                    setTimeout(typeWriter, typeSpeed);
+                }
+            } else {
+                // Terminado de escribir, mostrar pregunta
+                document.querySelector('.cursor').style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('question-area').style.opacity = '1';
+                }, 1000);
+            }
+        }
+
+        // 4. Generar Partículas de fondo
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for(let j=0; j<20; j++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (Math.random() * 10 + 5) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // 5. Reacción al "Sí"
+        function sayYes() {
+            const mainContent = document.getElementById('main-content');
+            const finalMessage = document.getElementById('final-message');
+            
+            // Desvanecer contenido actual
+            mainContent.style.transition = 'opacity 1s';
+            mainContent.style.opacity = '0';
+
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                finalMessage.style.display = 'block';
+                createConfetti();
+            }, 1000);
+        }
+
+        function createConfetti() {
+            const colors = ['#d4a5a5', '#ffebd2', '#e6e6fa', '#ffd700'];
+            for (let k = 0; k < 100; k++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(conf);
+            }
+        }
+    </script>
 </body>
 </html>
