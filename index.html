@@ -1,110 +1,330 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para mi Estrella</title>
     <style>
-        body {
+        /* --- ESTILO VISUAL --- */
+        :root {
+            --bg-color: #fdfbf7; /* Crema suave */
+            --accent-color: #e08e8e; /* Rosa más cálido */
+            --star-color: rgba(255, 215, 0, 0.6); /* Dorado suave */
+            --text-color: #5a4a4a;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-serif: 'Georgia', serif;
+        }
+
+        body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0; /* Color de fondo suave */
+            height: 100%;
+            width: 100%;
+            background-color: var(--bg-color);
+            font-family: var(--font-main);
+            color: var(--text-color);
+            overflow: hidden;
             display: flex;
             justify-content: center;
-            /* Usamos align-items flex-start y padding-top para subir el contenido */
-            align-items: flex-start; 
-            min-height: 100vh;
+            align-items: center;
+        }
+
+        /* Fondo de Estrellas */
+        .background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #fff9f0 0%, #fdfbf7 100%);
+            z-index: -2;
+        }
+
+        .stars-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: var(--star-color);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* --- PANTALLA DE INICIO (CORAZÓN) --- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 100; transition: opacity 1s ease;
+            cursor: pointer; /* Indica que se puede hacer click */
+        }
+
+        .heart-trigger-container {
             text-align: center;
+            animation: pulseHeart 2s infinite ease-in-out;
         }
 
-        .container {
-            /* Empuja el contenido hacia abajo un 15% de la altura de la pantalla, 
-               ajustable para que quede más arriba o abajo */
-            margin-top: 15vh; 
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 80%;
-            max-width: 400px;
+        .heart-svg {
+            width: 100px; height: 90px;
+            fill: var(--accent-color);
+            filter: drop-shadow(0 5px 10px rgba(224, 142, 142, 0.4));
+            transition: transform 0.3s;
         }
 
-        h1 {
-            color: #333;
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
+        .click-text {
+            margin-top: 15px;
+            font-family: var(--font-serif);
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.2s;
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            opacity: 0; display: none;
+            flex-direction: column; align-items: center; text-align: center;
+            width: 90%; max-width: 500px;
+            padding: 20px; box-sizing: border-box;
+            transition: opacity 2s ease;
         }
 
-        button:active {
-            transform: scale(0.95);
+        /* Galería de fotos MEJORADA */
+        .photo-container {
+            position: relative;
+            width: 100%; height: 350px; /* Más alto para fotos más grandes */
+            margin-bottom: 30px;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        #btn-yes {
-            background-color: #4CAF50;
-            color: white;
+        .photo {
+            position: absolute;
+            width: 75%; /* Fotos más grandes */
+            height: auto;
+            aspect-ratio: 3/4; /* Mantiene proporción vertical */
+            object-fit: cover;
+            border: 6px solid #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            opacity: 0; transition: all 1.5s ease; /* Transición más suave */
+            border-radius: 4px;
         }
 
-        #btn-no {
-            background-color: #f44336;
-            color: white;
+        /* Apilado sutil */
+        .photo:nth-child(1) { transform: rotate(-3deg); z-index: 1; }
+        .photo:nth-child(2) { transform: rotate(2deg); z-index: 2; }
+        .photo:nth-child(3) { transform: rotate(-1deg); z-index: 3; }
+        
+        .photo.visible { opacity: 1; }
+
+        /* Texto Typewriter */
+        .message-box {
+            font-family: var(--font-serif);
+            font-size: 1.15rem; line-height: 1.6;
+            margin-bottom: 40px; min-height: 140px;
+            color: #5e5e5e;
         }
 
-        .hidden {
-            display: none;
+        .cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+        /* Pregunta Final */
+        .question-area {
+            opacity: 0; transition: opacity 1s ease;
+            display: flex; flex-direction: column; gap: 20px; align-items: center;
         }
+
+        .big-question { font-size: 1.6rem; color: var(--text-color); margin-bottom: 10px; }
+
+        .yes-btn {
+            background-color: var(--accent-color); color: white; border: none;
+            padding: 15px 50px; font-size: 1.2rem; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(224, 142, 142, 0.4);
+            transition: transform 0.2s; font-family: var(--font-serif);
+        }
+        .yes-btn:active { transform: scale(0.95); }
+
+        /* Mensaje Final */
+        #final-message {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; display: none; width: 90%;
+        }
+        #final-message h1 {
+            font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-color);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 id="question-text">Do you want to go out with me?</h1>
-        
-        <div class="buttons" id="btn-container">
-            <button id="btn-yes" onclick="clickedYes()">Yes</button>
-            <button id="btn-no" onclick="clickedNo()">No</button>
+    <div class="background"></div>
+    <div class="stars-container" id="stars-container"></div>
+
+    <audio id="bg-music" loop>
+        <source src="musica.mp3" type="audio/mp3">
+    </audio>
+
+    <div id="start-screen" onclick="startExperience()">
+        <div class="heart-trigger-container">
+            <svg class="heart-svg" viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            <p class="click-text">Da click aquí</p>
         </div>
     </div>
 
-    <script>
-        let noClickCount = 0;
-        const questionText = document.getElementById('question-text');
-        const btnContainer = document.getElementById('btn-container');
+    <div id="main-content">
+        <div class="photo-container">
+            <img src="foto1.jpg" class="photo" alt="Recuerdo 1">
+            <img src="foto2.jpg" class="photo" alt="Recuerdo 2">
+            <img src="foto3.jpg" class="photo" alt="Recuerdo 3">
+        </div>
 
-        function clickedYes() {
-            // Mensaje si dicen que sí
-            questionText.innerText = "Yay! See you then! ❤️";
-            btnContainer.classList.add('hidden'); // Oculta los botones
+        <div class="message-box">
+            <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
+        </div>
+
+        <div class="question-area" id="question-area">
+            <div class="big-question">¿Quieres ser mi Valentine?</div>
+            <button class="yes-btn" onclick="sayYes()">¡Sí, acepto!</button>
+        </div>
+    </div>
+
+    <div id="final-message">
+        <h1>¡Sabía que dirías que sí! ❤️</h1>
+        <p style="margin-top: 15px; color: #666; font-size: 1.1rem;">Eres mi estrella favorita.</p>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DEL TEXTO ---
+        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrella que siempre miro para guiarme. |Gracias por iluminar mis días, incluso a la distancia...";
+        const typeSpeed = 55;
+        const pauseTime = 1000;
+
+        // 1. Generar Estrellas (Theme)
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            for(let j=0; j<35; j++) { // Más estrellas
+                const s = document.createElement('div');
+                s.classList.add('star');
+                s.style.left = Math.random() * 100 + '%';
+                s.style.top = Math.random() * 100 + '%';
+                const size = Math.random() * 10 + 5; // Tamaño variable
+                s.style.width = size + 'px';
+                s.style.height = size + 'px';
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Titileo variado
+                s.style.animationDelay = Math.random() + 's';
+                container.appendChild(s);
+            }
+        }
+        createStars();
+
+        // 2. Iniciar Experiencia (Click en el corazón)
+        function startExperience() {
+            const startScreen = document.getElementById('start-screen');
+            const mainContent = document.getElementById('main-content');
+            const music = document.getElementById('bg-music');
+
+            music.volume = 0.6;
+            music.play().catch(e => console.log("Audio requiere interacción"));
+
+            startScreen.style.opacity = '0';
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    // Iniciamos la secuencia de fotos lenta
+                    showPhotosSlowly();
+                }, 100);
+            }, 1000);
         }
 
-        function clickedNo() {
-            noClickCount++;
+        // 3. Mostrar fotos LENTAMENTE
+        function showPhotosSlowly() {
+            const photos = document.querySelectorAll('.photo');
+            let delayTime = 500; // Tiempo antes de que empiece la primera
+            
+            photos.forEach((photo, index) => {
+                setTimeout(() => {
+                    photo.classList.add('visible');
+                    // Si es la última foto, calculamos cuándo empezar a escribir
+                    if (index === photos.length - 1) {
+                       setTimeout(typeWriter, 2000); // Espera 2s después de la última foto
+                    }
+                }, delayTime);
+                // Aumentamos el tiempo para la siguiente foto (2.5 segundos entre fotos)
+                delayTime += 2500; 
+            });
+        }
 
-            if (noClickCount === 1) {
-                // Primer click en NO: Pregunta si está segura
-                questionText.innerText = "Are you sure?";
-            } else if (noClickCount === 2) {
-                // Segundo click en NO: Mensaje final
-                questionText.innerText = "Okay, that's fine. I appreciate everything anyway.";
-                btnContainer.classList.add('hidden'); // Oculta los botones
+        // 4. Efecto Typewriter
+        let i = 0;
+        const textElement = document.getElementById('typewriter-text');
+        function typeWriter() {
+            if (i < textToType.length) {
+                const char = textToType.charAt(i);
+                if (char === '|') {
+                    i++;
+                    textElement.innerHTML += '<br><br>';
+                    setTimeout(typeWriter, pauseTime);
+                } else {
+                    textElement.innerHTML += char;
+                    i++;
+                    setTimeout(typeWriter, typeSpeed);
+                }
+            } else {
+                document.querySelector('.cursor').style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('question-area').style.opacity = '1';
+                }, 1000);
+            }
+        }
+
+        // 5. Reacción al "Sí"
+        function sayYes() {
+            const mainContent = document.getElementById('main-content');
+            const finalMessage = document.getElementById('final-message');
+            
+            mainContent.style.opacity = '0';
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                finalMessage.style.display = 'block';
+                // Lluvia de estrellas y corazones al final
+                createFinalConfetti();
+            }, 1000);
+        }
+
+        function createFinalConfetti() {
+            const colors = ['#e08e8e', '#ffd700', '#fff'];
+            for (let k = 0; k < 120; k++) {
+                const conf = document.createElement('div');
+                // Reutilizamos la clase star para el confeti, pero cayendo
+                conf.classList.add('star'); 
+                conf.style.position = 'fixed';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-10px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                // Animación de caída simple inline para no ensuciar el CSS
+                conf.style.transition = `top ${Math.random() * 3 + 2}s linear, opacity 1s ease-out 2s`;
+                document.body.appendChild(conf);
+
+                setTimeout(() => {
+                     conf.style.top = '110vh'; // Caer fuera de la pantalla
+                     conf.style.opacity = '0';
+                }, 100);
             }
         }
     </script>
-
 </body>
 </html>
