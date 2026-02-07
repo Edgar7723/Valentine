@@ -85,39 +85,47 @@
             width: 100%; height: 100%; 
             box-sizing: border-box; transition: opacity 2s ease;
             position: relative; 
-            padding-top: 15vh;
+            /* Subimos un poco el contenido para dar espacio */
+            padding-top: 12vh;
         }
 
         /* FOTOS DISPERSAS */
         .photo {
             position: absolute;
-            width: 35%; 
-            max-width: 150px;
+            width: 32%; /* Un poquito más pequeñas para que no estorben */
+            max-width: 140px;
             height: auto;
-            border: 6px solid #fff;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
             opacity: 0; transition: opacity 1.5s ease, transform 1s ease;
             z-index: 1; 
         }
 
-        /* --- AQUÍ ESTÁN LAS 4 POSICIONES --- */
-        .photo-1 { top: 5%; left: 5%; transform: rotate(-15deg); }
-        .photo-2 { top: 8%; right: 5%; transform: rotate(10deg); }
-        .photo-3 { bottom: 18%; left: 8%; transform: rotate(-8deg); }
-        .photo-4 { bottom: 15%; right: 8%; transform: rotate(12deg); } /* <--- AQUÍ ESTÁ LA FOTO 4 */
+        /* POSICIONES AJUSTADAS */
+        .photo-1 { top: 3%; left: 3%; transform: rotate(-15deg); }
+        .photo-2 { top: 6%; right: 3%; transform: rotate(10deg); }
+        .photo-3 { bottom: 20%; left: 5%; transform: rotate(-8deg); }
+        .photo-4 { bottom: 18%; right: 5%; transform: rotate(12deg); } 
 
         .photo.visible { opacity: 1; }
 
-        /* CAJA DE TEXTO */
+        /* CAJA DE TEXTO (COMPACTA) */
         .message-box {
-            font-family: var(--font-serif); font-size: 1.2rem; line-height: 1.6;
-            color: #5e5e5e; width: 80%; max-width: 500px;
+            font-family: var(--font-serif); 
+            /* Texto un poco más pequeño */
+            font-size: 1.05rem; 
+            /* Líneas más juntas */
+            line-height: 1.35; 
+            color: #5e5e5e; 
+            /* Más ancho para que quepa más texto en menos líneas */
+            width: 85%; 
+            max-width: 500px;
             z-index: 10; 
-            background: rgba(253, 251, 247, 0.6); 
-            padding: 15px;
+            background: rgba(253, 251, 247, 0.7); 
+            padding: 12px;
             border-radius: 10px;
-            backdrop-filter: blur(2px); 
-            margin-bottom: 20px;
+            backdrop-filter: blur(3px); 
+            margin-bottom: 15px;
         }
 
         .cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
@@ -126,17 +134,18 @@
         /* --- PREGUNTA Y BOTONES --- */
         .question-area {
             opacity: 0; transition: opacity 1s ease;
-            display: flex; flex-direction: column; gap: 15px; align-items: center;
+            display: flex; flex-direction: column; gap: 12px; align-items: center;
             width: 100%;
             z-index: 10;
-            margin-top: auto; padding-bottom: 12vh;
+            margin-top: auto; 
+            padding-bottom: 10vh; /* Espacio inferior seguro */
         }
-        .big-question { font-size: 1.6rem; color: var(--text-color); margin-bottom: 5px; font-weight: bold;}
+        .big-question { font-size: 1.5rem; color: var(--text-color); margin-bottom: 5px; font-weight: bold;}
         
-        .buttons-row { display: flex; gap: 20px; }
+        .buttons-row { display: flex; gap: 15px; }
 
         .yes-btn, .no-btn {
-            border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 50px;
+            border: none; padding: 12px 35px; font-size: 1rem; border-radius: 50px;
             cursor: pointer; transition: transform 0.2s; font-family: var(--font-serif);
         }
 
@@ -151,15 +160,15 @@
         }
 
         #final-message h1 {
-            font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-color);
+            font-family: var(--font-serif); font-size: 2rem; color: var(--accent-color);
             text-shadow: 2px 2px 0px #fff;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .sad-photo {
-            width: 70%; max-width: 300px; border-radius: 10px;
+            width: 65%; max-width: 280px; border-radius: 10px;
             border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px; animation: fadeIn 2s ease;
+            margin-bottom: 15px; animation: fadeIn 2s ease;
         }
         
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
@@ -193,7 +202,9 @@
         <img src="foto1.png" class="photo photo-1" alt="">
         <img src="foto2.png" class="photo photo-2" alt="">
         <img src="foto3.png" class="photo photo-3" alt="">
-        <img src="foto4.png" class="photo photo-4" alt=""> <div class="message-box">
+        <img src="foto4.png" class="photo photo-4" alt=""> 
+
+        <div class="message-box">
             <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
         </div>
 
@@ -207,8 +218,8 @@
     </div>
 
     <div id="final-message">
-        <h1>Te quiero muchooo❤️</h1>
-        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi notificación favorita.</p>
+        <h1>¡Sabía que dirías que sí! ❤️</h1>
+        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi estrella favorita.</p>
     </div>
 
     <div id="sad-screen">
@@ -219,7 +230,7 @@
 
     <script>
         // --- CONFIGURACIÓN ---
-        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrellita que siempre miro todas las noches para iluminarme. |Te agradezco por iluminar todos mis días|Es por eso que te realizo esta pregunta| Estrellita, ¿Quieres ser mi Valentine?";
+        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrellita que siempre miro todas las noches para iluminarme. |Te agradezco por iluminar mis días|Es por eso que te realizo esta pregunta| Naomi, ¿quieres ser mi Valentine?";
         const typeSpeed = 50;
         const pauseTime = 800;
 
@@ -264,7 +275,7 @@
             }, 1000);
         }
 
-        // 3. Mostrar Fotos
+        // 3. Mostrar Fotos (Lógica para 4 fotos)
         function showPhotosSlowly() {
             const photos = document.querySelectorAll('.photo');
             let delayTime = 300;
