@@ -9,7 +9,7 @@
         :root {
             --bg-color: #fdfbf7;
             --accent-color: #e08e8e;
-            --star-color: #ffd700;
+            --heart-color: #ffb7b2;
             --text-color: #5a4a4a;
             --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             --font-serif: 'Georgia', serif;
@@ -30,26 +30,41 @@
             z-index: -2;
         }
 
-        .stars-container {
+        /* Contenedor de corazones de fondo */
+        .hearts-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             overflow: hidden; z-index: -1; pointer-events: none;
         }
 
-        .star {
-            position: absolute; background-color: var(--star-color);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            animation: twinkle infinite ease-in-out; opacity: 0.8;
+        /* Forma de Corazón CSS para el fondo */
+        .heart-bg {
+            position: absolute;
+            width: 15px; height: 15px;
+            background-color: var(--heart-color);
+            transform: rotate(45deg);
+            opacity: 0.6;
+            animation: floatHeart infinite ease-in-out;
+        }
+        .heart-bg::before, .heart-bg::after {
+            content: "";
+            width: 15px; height: 15px;
+            background-color: inherit;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .heart-bg::before { left: -8px; }
+        .heart-bg::after { top: -8px; }
+
+        @keyframes floatHeart {
+            0%, 100% { transform: translateY(0) rotate(45deg) scale(0.8); opacity: 0.4; }
+            50% { transform: translateY(-20px) rotate(45deg) scale(1.1); opacity: 0.8; }
         }
 
+        /* Estrellas cayendo (para el final) */
         .falling-star {
-            position: fixed; background-color: var(--star-color);
+            position: fixed; background-color: #ffd700;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             z-index: 9999; top: -50px;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.4; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
         }
 
         /* --- PANTALLA INICIO --- */
@@ -67,30 +82,44 @@
         /* --- CONTENIDO PRINCIPAL --- */
         #main-content {
             opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center;
-            width: 90%; height: 100%; max-width: 500px;
+            width: 100%; height: 100%; 
             box-sizing: border-box; transition: opacity 2s ease;
-            justify-content: flex-start; padding-top: 5vh;
+            position: relative; 
+            padding-top: 15vh;
         }
 
-        .photo-container {
-            position: relative; width: 100%; height: 35vh; max-height: 350px;
-            margin-bottom: 20px; display: flex; justify-content: center; align-items: center;
-        }
-
+        /* FOTOS DISPERSAS */
         .photo {
-            position: absolute; width: auto; height: 90%; aspect-ratio: 3/4; object-fit: cover;
-            border: 6px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            opacity: 0; transition: all 1.5s ease; border-radius: 4px;
+            position: absolute;
+            width: 35%; 
+            max-width: 150px;
+            height: auto;
+            border: 6px solid #fff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            opacity: 0; transition: opacity 1.5s ease, transform 1s ease;
+            z-index: 1; 
         }
-        .photo:nth-child(1) { transform: rotate(-3deg); z-index: 1; }
-        .photo:nth-child(2) { transform: rotate(2deg); z-index: 2; }
-        .photo:nth-child(3) { transform: rotate(-1deg); z-index: 3; }
+
+        /* --- AQUÍ ESTÁN LAS 4 POSICIONES --- */
+        .photo-1 { top: 5%; left: 5%; transform: rotate(-15deg); }
+        .photo-2 { top: 8%; right: 5%; transform: rotate(10deg); }
+        .photo-3 { bottom: 18%; left: 8%; transform: rotate(-8deg); }
+        .photo-4 { bottom: 15%; right: 8%; transform: rotate(12deg); } /* <--- AQUÍ ESTÁ LA FOTO 4 */
+
         .photo.visible { opacity: 1; }
 
+        /* CAJA DE TEXTO */
         .message-box {
-            font-family: var(--font-serif); font-size: 1.1rem; line-height: 1.5;
-            margin-bottom: 20px; min-height: 100px; color: #5e5e5e; width: 100%;
+            font-family: var(--font-serif); font-size: 1.2rem; line-height: 1.6;
+            color: #5e5e5e; width: 80%; max-width: 500px;
+            z-index: 10; 
+            background: rgba(253, 251, 247, 0.6); 
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(2px); 
+            margin-bottom: 20px;
         }
+
         .cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
@@ -98,29 +127,21 @@
         .question-area {
             opacity: 0; transition: opacity 1s ease;
             display: flex; flex-direction: column; gap: 15px; align-items: center;
-            margin-top: auto; padding-bottom: 10vh;
+            width: 100%;
+            z-index: 10;
+            margin-top: auto; padding-bottom: 12vh;
         }
-        .big-question { font-size: 1.5rem; color: var(--text-color); margin-bottom: 5px; font-weight: bold;}
+        .big-question { font-size: 1.6rem; color: var(--text-color); margin-bottom: 5px; font-weight: bold;}
         
-        .buttons-row {
-            display: flex; gap: 20px;
-        }
+        .buttons-row { display: flex; gap: 20px; }
 
         .yes-btn, .no-btn {
             border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 50px;
             cursor: pointer; transition: transform 0.2s; font-family: var(--font-serif);
         }
 
-        .yes-btn {
-            background-color: var(--accent-color); color: white;
-            box-shadow: 0 4px 15px rgba(224, 142, 142, 0.4);
-        }
-        
-        .no-btn {
-            background-color: #d1c4c4; color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
+        .yes-btn { background-color: var(--accent-color); color: white; box-shadow: 0 4px 15px rgba(224, 142, 142, 0.4); }
+        .no-btn { background-color: #d1c4c4; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .yes-btn:active, .no-btn:active { transform: scale(0.95); }
 
         /* --- MENSAJES FINALES --- */
@@ -129,19 +150,16 @@
             text-align: center; display: none; width: 90%; z-index: 1000;
         }
 
-        /* Animación YES */
         #final-message h1 {
             font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-color);
             text-shadow: 2px 2px 0px #fff;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Estilos NO (Sad) */
         .sad-photo {
             width: 70%; max-width: 300px; border-radius: 10px;
             border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            animation: fadeIn 2s ease;
+            margin-bottom: 20px; animation: fadeIn 2s ease;
         }
         
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
@@ -152,7 +170,7 @@
 <body>
 
     <div class="background"></div>
-    <div class="stars-container" id="stars-container"></div>
+    <div class="hearts-container" id="hearts-container"></div>
 
     <audio id="bg-music" loop>
         <source src="musica.mp3" type="audio/mp3">
@@ -172,13 +190,10 @@
     </div>
 
     <div id="main-content">
-        <div class="photo-container">
-            <img src="foto1.jpg" class="photo" alt="Recuerdo 1">
-            <img src="foto2.jpg" class="photo" alt="Recuerdo 2">
-            <img src="foto3.jpg" class="photo" alt="Recuerdo 3">
-        </div>
-
-        <div class="message-box">
+        <img src="foto1.png" class="photo photo-1" alt="">
+        <img src="foto2.png" class="photo photo-2" alt="">
+        <img src="foto3.png" class="photo photo-3" alt="">
+        <img src="foto4.png" class="photo photo-4" alt=""> <div class="message-box">
             <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
         </div>
 
@@ -192,38 +207,42 @@
     </div>
 
     <div id="final-message">
-        <h1>¡Sabía que dirías que sí! ❤️</h1>
-        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi estrella favorita.</p>
+        <h1>Te quiero muchooo❤️</h1>
+        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi notificación favorita.</p>
     </div>
 
     <div id="sad-screen">
-        <img src="triste.jpg" class="sad-photo" alt="Triste">
-        <h2 style="font-family: 'Georgia', serif; color: #7f7f7f;">Oh... está bien.</h2>
-        <p style="color: #999;">Siempre serás especial para mí.</p>
+        <img src="triste.png" class="sad-photo" alt="Triste">
+        <h2 style="font-family: 'Georgia', serif; color: #7f7f7f;">Está bien Naomi.</h2>
+        <p style="color: #999;">Aún así te quiero mucho.</p>
     </div>
 
     <script>
         // --- CONFIGURACIÓN ---
-        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrella que siempre miro para guiarme. |Gracias por iluminar mis días...";
+        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrellita que siempre miro todas las noches para iluminarme. |Te agradezco por iluminar todos mis días|Es por eso que te realizo esta pregunta| Estrellita, ¿Quieres ser mi Valentine?";
         const typeSpeed = 50;
         const pauseTime = 800;
 
-        // 1. Estrellas de fondo
-        function createStars() {
-            const container = document.getElementById('stars-container');
-            for(let j=0; j<50; j++) { 
+        // 1. GENERAR CORAZONES DE FONDO
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const colors = ['#ffb7b2', '#ff9aa2', '#e2f0cb', '#b5ead7']; 
+            
+            for(let j=0; j<30; j++) { 
                 const s = document.createElement('div');
-                s.classList.add('star');
+                s.classList.add('heart-bg');
                 s.style.left = Math.random() * 100 + '%';
                 s.style.top = Math.random() * 100 + '%';
-                const size = Math.random() * 12 + 4; 
-                s.style.width = size + 'px';
-                s.style.height = size + 'px';
-                s.style.animationDuration = (Math.random() * 3 + 1) + 's'; 
+                s.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const scale = Math.random() * 0.5 + 0.5;
+                s.style.transform = `scale(${scale}) rotate(45deg)`;
+                
+                s.style.animationDuration = (Math.random() * 3 + 2) + 's'; 
                 container.appendChild(s);
             }
         }
-        createStars();
+        createHearts();
 
         // 2. Iniciar
         function startExperience() {
@@ -245,16 +264,17 @@
             }, 1000);
         }
 
-        // 3. Fotos
+        // 3. Mostrar Fotos
         function showPhotosSlowly() {
             const photos = document.querySelectorAll('.photo');
-            let delayTime = 500;
+            let delayTime = 300;
             photos.forEach((photo, index) => {
                 setTimeout(() => {
                     photo.classList.add('visible');
-                    if (index === photos.length - 1) setTimeout(typeWriter, 1500);
+                    // Esperamos a que aparezcan 3 fotos antes de escribir
+                    if (index === 2) setTimeout(typeWriter, 1000);
                 }, delayTime);
-                delayTime += 2000; 
+                delayTime += 1500; 
             });
         }
 
@@ -302,22 +322,17 @@
             const sadMusic = document.getElementById('sad-music');
 
             mainContent.style.opacity = '0';
-            
-            // Transición suave de música
-            // Pausamos la música alegre
             bgMusic.pause();
             
             setTimeout(() => {
                 mainContent.style.display = 'none';
                 sadScreen.style.display = 'block';
-                
-                // Reproducimos la música triste
                 sadMusic.volume = 0.5;
                 sadMusic.play().catch(e => console.log("Audio triste bloqueado"));
             }, 1000);
         }
 
-        // 7. Lluvia de estrellas
+        // 7. Lluvia de Estrellas
         function startStarRain() {
             const colors = ['#ffd700', '#ffeb3b', '#e08e8e', '#ffffff'];
             const createFallingStar = () => {
