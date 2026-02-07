@@ -2,31 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Para mi Estrella</title>
     <style>
-        /* --- ESTILO VISUAL OPTIMIZADO PARA iPHONE --- */
+        /* --- ESTILO VISUAL --- */
         :root {
             --bg-color: #fdfbf7;
             --accent-color: #e08e8e;
             --heart-color: #ffb7b2;
-            --text-color: #5a4a4a;
-            /* Fuente nativa de Apple (San Francisco) para que se vea premium */
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --text-color: #ff0000;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             --font-serif: 'Georgia', serif;
         }
 
         body, html {
-            margin: 0; padding: 0; 
-            width: 100%;
-            /* Altura dinámica para Safari móvil */
-            height: 100dvh; 
+            margin: 0; padding: 0; height: 100%; width: 100%;
             background-color: var(--bg-color);
             font-family: var(--font-main); color: var(--text-color);
             overflow: hidden;
             display: flex; justify-content: center; align-items: center;
-            /* Evita el resaltado gris al tocar en iOS */
-            -webkit-tap-highlight-color: transparent;
         }
 
         /* Fondo */
@@ -42,15 +36,21 @@
             overflow: hidden; z-index: -1; pointer-events: none;
         }
 
+        /* Forma de Corazón CSS para el fondo */
         .heart-bg {
-            position: absolute; width: 15px; height: 15px;
+            position: absolute;
+            width: 15px; height: 15px;
             background-color: var(--heart-color);
-            transform: rotate(45deg); opacity: 0.6;
+            transform: rotate(45deg);
+            opacity: 0.6;
             animation: floatHeart infinite ease-in-out;
         }
         .heart-bg::before, .heart-bg::after {
-            content: ""; width: 15px; height: 15px;
-            background-color: inherit; border-radius: 50%; position: absolute;
+            content: "";
+            width: 15px; height: 15px;
+            background-color: inherit;
+            border-radius: 50%;
+            position: absolute;
         }
         .heart-bg::before { left: -8px; }
         .heart-bg::after { top: -8px; }
@@ -60,6 +60,7 @@
             50% { transform: translateY(-20px) rotate(45deg) scale(1.1); opacity: 0.8; }
         }
 
+        /* Estrellas cayendo (para el final) */
         .falling-star {
             position: fixed; background-color: #ffd700;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
@@ -80,54 +81,43 @@
 
         /* --- CONTENIDO PRINCIPAL --- */
         #main-content {
-            opacity: 0; display: none; flex-direction: column; align-items: center; 
-            text-align: center; width: 100%; height: 100dvh;
+            opacity: 0; display: none; flex-direction: column; align-items: center; text-align: center;
+            width: 100%; height: 100%; 
             box-sizing: border-box; transition: opacity 2s ease;
-            position: relative;
-            
-            /* DISTRIBUCIÓN VERTICAL FLEXIBLE */
-            justify-content: space-between; 
-            
-            /* PADDING DE SEGURIDAD PARA IPHONE (Notch y barra inferior) */
-            padding-top: max(15vh, env(safe-area-inset-top)); 
-            padding-bottom: max(10vh, env(safe-area-inset-bottom));
+            position: relative; 
+            padding-top: 15vh;
         }
 
         /* FOTOS DISPERSAS */
         .photo {
             position: absolute;
-            width: 30%; /* Un poco más chicas para pantallas estrechas */
-            max-width: 130px; height: auto;
-            border: 4px solid #fff; /* Borde más fino */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 35%; 
+            max-width: 150px;
+            height: auto;
+            border: 6px solid #fff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             opacity: 0; transition: opacity 1.5s ease, transform 1s ease;
-            z-index: 1; pointer-events: none; /* Para que no bloqueen clicks */
+            z-index: 1; 
         }
 
-        /* Posiciones ajustadas para no tocar bordes de pantalla curva */
-        .photo-1 { top: 12%; left: -2%; transform: rotate(-15deg); }
-        .photo-2 { top: 15%; right: -2%; transform: rotate(10deg); }
-        .photo-3 { bottom: 25%; left: 2%; transform: rotate(-8deg); }
-        .photo-4 { bottom: 22%; right: 2%; transform: rotate(12deg); }
+        /* --- AQUÍ ESTÁN LAS 4 POSICIONES --- */
+        .photo-1 { top: 5%; left: 5%; transform: rotate(-15deg); }
+        .photo-2 { top: 8%; right: 5%; transform: rotate(10deg); }
+        .photo-3 { bottom: 18%; left: 8%; transform: rotate(-8deg); }
+        .photo-4 { bottom: 15%; right: 8%; transform: rotate(12deg); } /* <--- AQUÍ ESTÁ LA FOTO 4 */
 
         .photo.visible { opacity: 1; }
 
         /* CAJA DE TEXTO */
         .message-box {
-            font-family: var(--font-serif); 
-            font-size: 1.05rem; 
-            line-height: 1.4; 
-            color: #5e5e5e; 
-            width: 82%; 
+            font-family: var(--font-serif); font-size: 1.2rem; line-height: 1.6;
+            color: #5e5e5e; width: 80%; max-width: 500px;
             z-index: 10; 
-            /* Fondo más borroso estilo iOS */
-            background: rgba(253, 251, 247, 0.75); 
+            background: rgba(253, 251, 247, 0.6); 
             padding: 15px;
-            border-radius: 12px;
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px); /* Soporte Safari */
-            margin-top: 20px; /* Separación de arriba */
-            flex-grow: 0; /* No estirar */
+            border-radius: 10px;
+            backdrop-filter: blur(2px); 
+            margin-bottom: 20px;
         }
 
         .cursor { display: inline-block; width: 2px; background-color: var(--accent-color); animation: blink 1s infinite; }
@@ -137,44 +127,38 @@
         .question-area {
             opacity: 0; transition: opacity 1s ease;
             display: flex; flex-direction: column; gap: 15px; align-items: center;
-            width: 100%; z-index: 10;
-            /* Asegura que no quede pegado al borde inferior */
-            margin-bottom: env(safe-area-inset-bottom);
+            width: 100%;
+            z-index: 10;
+            margin-top: auto; padding-bottom: 12vh;
         }
+        .big-question { font-size: 1.6rem; color: var(--text-color); margin-bottom: 5px; font-weight: bold;}
         
-        .big-question { 
-            font-size: 1.5rem; color: var(--text-color); 
-            margin-bottom: 5px; font-weight: 700;
-            letter-spacing: -0.5px; /* Estilo Apple */
-        }
-        
-        .buttons-row { display: flex; gap: 15px; }
+        .buttons-row { display: flex; gap: 20px; }
 
         .yes-btn, .no-btn {
-            border: none; padding: 14px 35px; font-size: 1rem; border-radius: 50px;
-            cursor: pointer; transition: transform 0.1s; font-family: var(--font-serif);
-            font-weight: bold;
+            border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 50px;
+            cursor: pointer; transition: transform 0.2s; font-family: var(--font-serif);
         }
 
         .yes-btn { background-color: var(--accent-color); color: white; box-shadow: 0 4px 15px rgba(224, 142, 142, 0.4); }
-        .no-btn { background-color: #d8d8d8; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .yes-btn:active, .no-btn:active { transform: scale(0.92); }
+        .no-btn { background-color: #d1c4c4; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .yes-btn:active, .no-btn:active { transform: scale(0.95); }
 
         /* --- MENSAJES FINALES --- */
         #final-message, #sad-screen {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; display: none; width: 85%; z-index: 1000;
+            text-align: center; display: none; width: 90%; z-index: 1000;
         }
 
         #final-message h1 {
-            font-family: var(--font-serif); font-size: 2rem; color: var(--accent-color);
+            font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-color);
             text-shadow: 2px 2px 0px #fff;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .sad-photo {
-            width: 65%; max-width: 280px; border-radius: 12px;
-            border: 5px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 70%; max-width: 300px; border-radius: 10px;
+            border: 5px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 20px; animation: fadeIn 2s ease;
         }
         
@@ -188,11 +172,11 @@
     <div class="background"></div>
     <div class="hearts-container" id="hearts-container"></div>
 
-    <audio id="bg-music" loop playsinline>
+    <audio id="bg-music" loop>
         <source src="musica.mp3" type="audio/mp3">
     </audio>
 
-    <audio id="sad-music" loop playsinline>
+    <audio id="sad-music" loop>
         <source src="musica_triste.mp3" type="audio/mp3">
     </audio>
 
@@ -201,7 +185,7 @@
             <svg class="heart-svg" viewBox="0 0 32 29.6">
                 <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
             </svg>
-            <p class="click-text">Toca el corazón</p>
+            <p class="click-text">Da click aquí</p>
         </div>
     </div>
 
@@ -209,11 +193,7 @@
         <img src="foto1.png" class="photo photo-1" alt="">
         <img src="foto2.png" class="photo photo-2" alt="">
         <img src="foto3.png" class="photo photo-3" alt="">
-        <img src="foto4.png" class="photo photo-4" alt=""> 
-
-        <div></div> 
-
-        <div class="message-box">
+        <img src="foto4.png" class="photo photo-4" alt=""> <div class="message-box">
             <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
         </div>
 
@@ -227,8 +207,8 @@
     </div>
 
     <div id="final-message">
-        <h1>¡Sabía que dirías que sí! ❤️</h1>
-        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi estrella favorita.</p>
+        <h1>Te quiero muchooo❤️</h1>
+        <p style="margin-top: 15px; color: #5a4a4a; font-size: 1.2rem; font-weight: bold;">Eres mi notificación favorita.</p>
     </div>
 
     <div id="sad-screen">
@@ -239,11 +219,11 @@
 
     <script>
         // --- CONFIGURACIÓN ---
-        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Eres esa estrellita que siempre miro todas las noches para iluminarme. |Te agradezco por iluminar mis días|Es por eso que te realizo esta pregunta| Naomi, ¿quieres ser mi Valentine?";
+        const textToType = "Aunque estemos lejos, te siento más cerca que a nadie. |Una estrellita que desde aquel 22 de junio|me ha iluminado cuando mas lo necesitaba. |Te agradezco por iluminar todos mis días|Es por eso que te realizo esta pregunta| Estrellita, ¿Quieres ser mi Valentine?";
         const typeSpeed = 50;
         const pauseTime = 800;
 
-        // 1. GENERAR CORAZONES
+        // 1. GENERAR CORAZONES DE FONDO
         function createHearts() {
             const container = document.getElementById('hearts-container');
             const colors = ['#ffb7b2', '#ff9aa2', '#e2f0cb', '#b5ead7']; 
@@ -254,53 +234,51 @@
                 s.style.left = Math.random() * 100 + '%';
                 s.style.top = Math.random() * 100 + '%';
                 s.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
                 const scale = Math.random() * 0.5 + 0.5;
                 s.style.transform = `scale(${scale}) rotate(45deg)`;
+                
                 s.style.animationDuration = (Math.random() * 3 + 2) + 's'; 
                 container.appendChild(s);
             }
         }
         createHearts();
 
-        // 2. INICIAR (Mejorado para iOS)
+        // 2. Iniciar
         function startExperience() {
             const startScreen = document.getElementById('start-screen');
             const mainContent = document.getElementById('main-content');
             const music = document.getElementById('bg-music');
 
-            // Intento de reproducir audio (iOS requiere toque, que ya ocurrió)
             music.volume = 0.5;
-            music.play().then(() => {
-                console.log("Audio reproduciendo");
-            }).catch(e => {
-                console.log("Audio bloqueado, esperando interacción");
-            });
+            music.play().catch(e => console.log("Audio requiere interacción"));
 
             startScreen.style.opacity = '0';
             setTimeout(() => {
                 startScreen.style.display = 'none';
-                mainContent.style.display = 'flex'; // Flex activa la distribución vertical
+                mainContent.style.display = 'flex';
                 setTimeout(() => {
                     mainContent.style.opacity = '1';
                     showPhotosSlowly();
                 }, 100);
-            }, 800);
+            }, 1000);
         }
 
-        // 3. FOTOS
+        // 3. Mostrar Fotos
         function showPhotosSlowly() {
             const photos = document.querySelectorAll('.photo');
             let delayTime = 300;
             photos.forEach((photo, index) => {
                 setTimeout(() => {
                     photo.classList.add('visible');
+                    // Esperamos a que aparezcan 3 fotos antes de escribir
                     if (index === 2) setTimeout(typeWriter, 1000);
                 }, delayTime);
-                delayTime += 1200; // Un poco más rápido para que no aburra
+                delayTime += 1500; 
             });
         }
 
-        // 4. TEXTO
+        // 4. Texto
         let i = 0;
         const textElement = document.getElementById('typewriter-text');
         function typeWriter() {
@@ -323,7 +301,7 @@
             }
         }
 
-        // 5. YES
+        // 5. Opción SÍ
         function sayYes() {
             const mainContent = document.getElementById('main-content');
             const finalMessage = document.getElementById('final-message');
@@ -336,7 +314,7 @@
             }, 1000);
         }
 
-        // 6. NO
+        // 6. Opción NO
         function sayNo() {
             const mainContent = document.getElementById('main-content');
             const sadScreen = document.getElementById('sad-screen');
@@ -350,11 +328,11 @@
                 mainContent.style.display = 'none';
                 sadScreen.style.display = 'block';
                 sadMusic.volume = 0.5;
-                sadMusic.play();
+                sadMusic.play().catch(e => console.log("Audio triste bloqueado"));
             }, 1000);
         }
 
-        // 7. LLUVIA
+        // 7. Lluvia de Estrellas
         function startStarRain() {
             const colors = ['#ffd700', '#ffeb3b', '#e08e8e', '#ffffff'];
             const createFallingStar = () => {
